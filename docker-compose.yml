@@ -1,0 +1,41 @@
+---
+  version: '3'
+  services:
+    kafka-connect-dev:
+      image: yasysadm1n/kafka-connect-standalone
+      container_name: kafka-connect-dev
+      ports:
+        - 8083:8083
+      logging:
+        driver: 'json-file'
+        options:
+            max-file: '5'
+            max-size: '100m'
+      environment:
+        KAFKA_OPTS: "-Doracle.jdbc.timezoneAsRegion=false -Duser.timezone=Europe/Berlin"
+        CONNECT_BOOTSTRAP_SERVERS: "${BOOTSTRAP_SERVERS}"
+        CONNECT_OFFSET_STORAGE_FILE_FILENAME: /tmp/connect.offsets
+        CONNECT_KEY_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+        CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "${SCHEMA_REGISTRY_URL}"
+        CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+        CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "${SCHEMA_REGISTRY_URL}"
+        CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+        CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+        CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
+        CONNECT_SECURITY_PROTOCOL: 'SSL'
+        CONNECT_SSL_TRUSTSTORE_LOCATION: "/ssl/${SSL_TRUSTSTORE}"
+        CONNECT_SSL_TRUSTSTORE_PASSWORD: "${SSL_PASSWORD}"
+        CONNECT_SSL_KEYSTORE_LOCATION: "/ssl/${SSL_KEYSTORE}"
+        CONNECT_SSL_KEYSTORE_PASSWORD: "${SSL_PASSWORD}"
+        CONNECT_SSL_KEY_PASSWORD: "${SSL_PASSWORD}"
+        CONNECT_PRODUCER_SECURITY_PROTOCOL: 'SSL'
+        CONNECT_PRODUCER_SSL_TRUSTSTORE_LOCATION: "/ssl/${SSL_TRUSTSTORE}"
+        CONNECT_PRODUCER_SSL_TRUSTSTORE_PASSWORD: "${SSL_PASSWORD}"
+        CONNECT_PRODUCER_SSL_KEYSTORE_LOCATION: "/ssl/${SSL_KEYSTORE}"
+        CONNECT_PRODUCER_SSL_KEYSTORE_PASSWORD: "${SSL_PASSWORD}"
+        CONNECT_PRODUCER_SSL_KEY_PASSWORD: "${SSL_PASSWORD}"
+      volumes:
+          - ./ssl:/ssl:ro
+          - ./jdbc-driver:/usr/share/java/kafka-connect-jdbc/jars:rw
+          - ./test.txt:/tmp/test.txt:ro
+          - ./connector.properties:/etc/kafka-connect/connector.properties:ro
