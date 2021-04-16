@@ -16,3 +16,15 @@ Place your client certificate and (if needed) jdbc-driver into the respective di
 ```shell
 docker compose up -d
 ```
+
+## Windows users only
+
+If you're working on a Windows machine, you need to update the volume paths in the `docker-compose.yml` as follows:
+
+```yaml
+volumes:
+    - .\ssl:/ssl:ro
+    - .\jdbc-driver:/usr/share/java/kafka-connect-jdbc/jars:rw
+    - .\test.txt:/tmp/test.txt:ro
+    - .\connector.properties:/etc/kafka-connect/connector.properties:ro
+```
