@@ -1,4 +1,4 @@
-# dkr-kafka-connect-dev
+# docker-kafka-connect-dev
 
 This image uses the official [confluent image](https://hub.docker.com/r/confluentinc/cp-kafka-connect) and changes the execution mode to standalone for development purposes. You shouldn't use this in production !!!
 
